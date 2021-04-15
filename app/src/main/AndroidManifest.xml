@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.wsu.veritablevittles">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_veritablevittles"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_veritablevittles_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <!-- android:theme="@style/Theme.VeritableVittles"> -->
+        <activity android:name=".ActMain" android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
