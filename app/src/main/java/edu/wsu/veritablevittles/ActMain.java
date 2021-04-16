@@ -1,5 +1,17 @@
+//==========================================================================
+//
+// Application: Veritable Vittles
+// Activity:    Activity Main
+// Course:      CSC 4330
+// Homework:    4
+// Author:      MD Bakhtiar R Akhib
+// Date:        04/15/2021
+// Description: This is an android app for Veritable Vittles that lets user reserve
+//              tables for their party and are able to view the wait time.
+//===========================================================================
 package edu.wsu.veritablevittles;
 
+//Importing packages
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -29,10 +41,15 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Timer;
 
+//---------------------------------
+// class ActMain
+//---------------------------------
 public class ActMain extends AppCompatActivity
     implements TextToSpeech.OnInitListener
 {
-
+    //-------------------------------------------
+    // Constants and variables
+    //-------------------------------------------
     private Toolbar tbrMain;
     private Timer timer;
 
@@ -62,6 +79,7 @@ public class ActMain extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.laymain);
 
+        //Getting the ids by value and storing them into objects
         txtViewPartyName = findViewById(R.id.txtViewPartyName);
         txtViewNumPeople = findViewById(R.id.txtViewNumPeople);
         txtViewOccasion = findViewById(R.id.txtViewOccasion);
@@ -71,10 +89,9 @@ public class ActMain extends AppCompatActivity
         btnSpeak = findViewById(R.id.btnSpeak);
         txtViewReservationReady = findViewById(R.id.txtViewReservationReady);
 
+        //Initializing the Text Views according to the requirement
         txtViewWaitTime.setText("0");
-
         btnSpeak.setEnabled(false);
-
         txtViewReservationReady.setVisibility(View.INVISIBLE);
 
         //Adding a custom toolbar along with image
@@ -82,20 +99,30 @@ public class ActMain extends AppCompatActivity
         setSupportActionBar(tbrMain);
         tbrMain.setNavigationIcon(R.mipmap.ic_launcher_veritablevittles);
 
+        //Calling the write file to write the seating types into the file
         writeInternalFile();
+
+        //Calling the read file to read from the file and initialize the seating type spinner
         readInternalFile();
     }
 
+    //----------------------------------------------------------------
+    // onStartClicked
+    //----------------------------------------------------------------
     public void onSubmitReservationClicked(View v)
     {
+        //Get the current button text
         String ButtonText = btnSubmitReservation.getText().toString();
 
+        // Checking if the button says submit
         if(ButtonText.equals("Submit")){
             Random r = new Random();
             int low = 20;
             int high = 41;
+            // Generate a random number between 20 and 40
             int randomMinute = r.nextInt(high - low) + low;
 
+            // Assign the random number to the wait minute
             txtViewWaitTime.setText(String.valueOf(randomMinute));
 
             // Cancel timer if  exists
@@ -108,10 +135,13 @@ public class ActMain extends AppCompatActivity
                     Shared.Data.TIMER_TASK_DELAY * 1000,
                     Shared.Data.TIMER_TASK_THREAD_PAUSE * 1000);
 
+            // Set the button to cancel
             btnSubmitReservation.setText("Cancel");
 
+            // Enable the speak button
             btnSpeak.setEnabled(true);
 
+            // Hide the reservation ready text view
             txtViewReservationReady.setVisibility(View.INVISIBLE);
 
             // Declare variables
@@ -137,16 +167,23 @@ public class ActMain extends AppCompatActivity
             if (timer != null) timer.cancel();
             timer = null;
 
+            // Reset the wait time to 0
             txtViewWaitTime.setText("0");
 
+            // Change the text on the cancel button to submit
             btnSubmitReservation.setText("Submit");
 
+            // Disable the speak button
             btnSpeak.setEnabled(false);
 
+            // Hide the reservation ready text view
             txtViewReservationReady.setVisibility(View.INVISIBLE);
         }
     }
 
+    //----------------------------------------------------------------
+    // onRecallClicked
+    //----------------------------------------------------------------
     public void onRecallReservationClicked(View v)
     {
         //Setting dialog box to ask if the user wants to recall or no
@@ -168,14 +205,21 @@ public class ActMain extends AppCompatActivity
                 spSeatingTypes.setSelection(preferences.getInt(String.valueOf(INTEGER_VALUE_spSeatingTypes), 0));
                 txtViewOccasion.setText(preferences.getString(STRING_VALUE_txtViewOccasion, ""));
 
+                // Cancel timer if  exists
                 if (timer != null) timer.cancel();
                 timer = null;
 
+                // Reset the wait time to 0
                 txtViewWaitTime.setText("0");
 
+                // Change the text on the cancel button to submit
                 btnSubmitReservation.setText("Submit");
 
+                // Hide the reservation ready text view
                 txtViewReservationReady.setVisibility(View.INVISIBLE);
+
+                // Disable the speak button
+                btnSpeak.setEnabled(false);
 
                 //Toast message to show that recall was executed
                 Toast.makeText(getApplicationContext(),"All the fields have been retrieved!", Toast.LENGTH_SHORT).show();
@@ -193,6 +237,9 @@ public class ActMain extends AppCompatActivity
         builder.show();
     }
 
+    //----------------------------------------------------------------
+    // onResetClicked
+    //----------------------------------------------------------------
     public void onResetClicked(View v){
         //Setting dialog box to ask if the user wants to reset or no
         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -209,14 +256,21 @@ public class ActMain extends AppCompatActivity
                 txtViewOccasion.setText("");
                 spSeatingTypes.setSelection(0);
 
+                // Cancel timer if  exists
                 if (timer != null) timer.cancel();
                 timer = null;
 
+                // Reset the wait time to 0
                 txtViewWaitTime.setText("0");
 
+                // Change the text on the cancel button to submit
                 btnSubmitReservation.setText("Submit");
 
+                // Hide the reservation ready text view
                 txtViewReservationReady.setVisibility(View.INVISIBLE);
+
+                // Disable the speak button
+                btnSpeak.setEnabled(false);
 
                 //Toast message to show that reset was executed
                 Toast.makeText(getApplicationContext(),"All the fields have been reset!", Toast.LENGTH_SHORT).show();
@@ -234,8 +288,12 @@ public class ActMain extends AppCompatActivity
         builder.show();
     }
 
+    //----------------------------------------------------------------
+    // onSpeakClicked
+    //----------------------------------------------------------------
     public void onSpeak(View v)
     {
+        // Checking if the wait time is 1
         if(txtViewWaitTime.getText().toString() == "1"){
             message = "Your wait time is 1 minute.";
         }
@@ -245,6 +303,7 @@ public class ActMain extends AppCompatActivity
         vs = new TextToSpeech(this, this);
 
     }
+
     //----------------------------------------------------------------
     // onInit
     // Implemented from interface TextToSpeech.OnInitListener
